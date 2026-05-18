@@ -17,9 +17,9 @@ name: Java CI with Maven
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   push:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
   # Compile once on the minimum supported JDK (21) and share artifacts with test jobs
@@ -66,8 +66,8 @@ jobs:
     timeout-minutes: 45
     strategy:
       matrix:
-        java: [ 21, 25 ]
-        module: [ Client, Server, Core, External, Integration-Test ]
+        java: [21, 25]
+        module: [Client, Server, Core, External, Integration-Test]
         experimental: [false]
       fail-fast: false
     steps:
