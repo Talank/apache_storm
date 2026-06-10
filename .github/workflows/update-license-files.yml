@@ -16,8 +16,6 @@
 name: Update License Files
 
 on:
-  push:
-    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -80,3 +78,5 @@ jobs:
 
             Please review the changes and merge if correct.
           labels: dependencies
+    strategy:
+      fail-fast: false

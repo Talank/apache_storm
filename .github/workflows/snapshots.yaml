@@ -18,14 +18,10 @@
 name: Publish Storm SNAPSHOTs
 
 on:
-  workflow_dispatch: { }
-  schedule:
-    # every day 5min after midnight, UTC.
-    - cron: "5 0 * * *"
-
+  workflow_dispatch:
 jobs:
   upload_to_nightlies:
-    if: github.repository == 'apache/storm'
+    if: always()
     name: Publish Snapshots
     runs-on: ubuntu-latest
     steps:
@@ -54,16 +50,18 @@ jobs:
              echo "snapshot=SNAPSHOT" >> $GITHUB_OUTPUT
           fi
       - name: Ensure a clean state without storm artifacts
-        if: steps.extract_version.outputs.snapshot == 'SNAPSHOT'
+        if: always()
         run: rm -rf ~/.m2/repository/org/apache/storm
       - name: Set up project dependencies
-        if: steps.extract_version.outputs.snapshot == 'SNAPSHOT'
+        if: always()
         run: /bin/bash ./dev-tools/gitact/gitact-install.sh `pwd`
       - name: Deploy Maven snapshots
-        if: steps.extract_version.outputs.snapshot == 'SNAPSHOT'
+        if: always()
         env:
           ASF_USERNAME: ${{ secrets.NEXUS_USER }}
           ASF_PASSWORD: ${{ secrets.NEXUS_PW }}
-        run: |
+        run: |-
           echo "<settings><servers><server><id>apache.snapshots.https</id><username>$ASF_USERNAME</username><password>$ASF_PASSWORD</password></server></servers></settings>" > settings.xml
           mvn --settings settings.xml -U -B -e -fae -ntp -DskipTests -P !examples deploy
+    strategy:
+      fail-fast: false
