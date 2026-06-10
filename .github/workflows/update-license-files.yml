@@ -16,8 +16,6 @@
 name: Update License Files
 
 on:
-  push:
-    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -26,7 +24,7 @@ permissions:
 
 jobs:
   update-license-files:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -80,3 +78,10 @@ jobs:
 
             Please review the changes and merge if correct.
           labels: dependencies
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
