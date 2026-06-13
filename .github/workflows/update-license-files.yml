@@ -48,6 +48,7 @@ jobs:
 
       - name: Ensure clean state without storm artifacts
         run: rm -rf ~/.m2/repository/org/apache/storm
+        shell: bash
 
       - name: Build Storm
         run: mvn clean install -B -DskipTests -Dcheckstyle.skip -Dpmd.skip
