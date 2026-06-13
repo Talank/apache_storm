@@ -42,6 +42,7 @@ jobs:
           java-version: 21
       - name: Ensure a clean state without storm artifacts
         run: rm -rf ~/.m2/repository/org/apache/storm
+        shell: bash
       - name: Build project (compile + install, skip tests)
         run: /bin/bash ./dev-tools/gitact/gitact-install.sh `pwd`
       - name: RAT license check
