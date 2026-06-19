@@ -49,6 +49,11 @@ jobs:
         if: runner.os == 'Windows'
       - name: Build project (compile + install, skip tests)
         run: /bin/bash ./dev-tools/gitact/gitact-install.sh `pwd`
+        if: runner.os != 'Windows'
+      - name: Build project (compile + install, skip tests) (Windows)
+        run: bash ./dev-tools/gitact/gitact-install.sh $(pwd)
+        shell: bash
+        if: runner.os == 'Windows'
       - name: RAT license check
         run: |
           rm -f install.txt storm-shaded-deps/install-shade.txt
