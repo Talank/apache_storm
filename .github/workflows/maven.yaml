@@ -17,6 +17,7 @@ name: Java CI with Maven
 
 on:
   workflow_dispatch:
+  push:
 
 jobs:
   # Compile once on the minimum supported JDK (21) and share artifacts with test jobs
@@ -44,11 +45,9 @@ jobs:
         run: rm -rf ~/.m2/repository/org/apache/storm
         shell: bash
       - name: Build project (compile + install, skip tests)
-        run: /bin/bash ./dev-tools/gitact/gitact-install.sh `pwd`
+        run: bash ./dev-tools/gitact/gitact-install.sh "${{ github.workspace }}"
       - name: RAT license check
-        run: |
-          rm -f install.txt storm-shaded-deps/install-shade.txt
-          mvn --batch-mode apache-rat:check -Prat
+        run: mvn --batch-mode apache-rat:check -Prat
       - name: Upload Storm artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -99,7 +98,7 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java }}
       - name: Run tests
-        run: |
-          export JDK_VERSION=${{ matrix.java }}
-          export USER=github
-          /bin/bash ./dev-tools/gitact/gitact-test.sh `pwd` ${{ matrix.module }};
+        env:
+          JDK_VERSION: ${{ matrix.java }}
+          USER: github
+        run: bash ./dev-tools/gitact/gitact-test.sh "${{ github.workspace }}" ${{ matrix.module }}

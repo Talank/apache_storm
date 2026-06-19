@@ -14,10 +14,18 @@
 
 import sys
 import subprocess
+import shutil
+import platform
 from datetime import datetime, timedelta
 
 
 def main(file, cmd):
+    # On Windows, executables like 'mvn' are installed as 'mvn.cmd'; Popen
+    # cannot find them by bare name. Resolve the full path via shutil.which.
+    if platform.system() == "Windows" and cmd:
+        resolved = shutil.which(cmd[0])
+        if resolved:
+            cmd = [resolved] + list(cmd[1:])
     print(cmd, "writing to", file)
     out = open(file, "w")
     count = 0
