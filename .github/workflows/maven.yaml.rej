@@ -1,0 +1,27 @@
+@@ -58,18 +68,8 @@
+           path: ~/.m2/repository/org/apache/storm/
+           retention-days: 1
+ 
+-  # The build job's strategy (os matrix) must appear before steps in valid YAML;
+-  # keeping it here as-is since this is the original file structure.
+-    strategy:
+-      matrix:
+-        os: &id001
+-          - ubuntu-latest
+-          - windows-latest
+-          - macos-latest
+-      fail-fast: false
+   test:
+     needs: build
+-    if: runner.os == 'Linux' || runner.os == 'macOS' || runner.os == 'Windows'
+     runs-on: ${{ matrix.os }}
+     continue-on-error: ${{ matrix.experimental }}
+     timeout-minutes: 45
+@@ -96,5 +99,6 @@
+       - name: Run tests
+         run: |
+           export JDK_VERSION=${{ matrix.java }}
+           export USER=github
+           bash ./dev-tools/gitact/gitact-test.sh "$(pwd)" ${{ matrix.module }}
++        shell: bash
+\ No newline at end of line
