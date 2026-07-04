@@ -18,16 +18,12 @@
 name: Publish Storm to nightlies.apache.org
 
 on:
-  workflow_dispatch: { }
-  schedule:
-    # every day 5min after midnight, UTC.
-    - cron: "5 0 * * *"
-
+  workflow_dispatch:
 jobs:
   upload_to_nightlies:
-    if: github.repository == 'apache/storm'
+    if: always()
     name: Upload to Nightly Builds
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -61,3 +57,9 @@ jobs:
           remote_port: ${{ secrets.NIGHTLIES_RSYNC_PORT }}
           remote_user: ${{ secrets.NIGHTLIES_RSYNC_USER }}
           remote_key: ${{ secrets.NIGHTLIES_RSYNC_KEY }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+      fail-fast: false
